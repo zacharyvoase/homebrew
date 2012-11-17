@@ -8,6 +8,15 @@ class Openssl < Formula
   keg_only :provided_by_osx,
     "The OpenSSL provided by OS X is too old for some software."
 
+  def patches
+    [
+      # Fix the issue with man page symlinks on case-insensitive filesystems (i.e. HFS).
+      # Without this we get symlink cycles for man pages, because HFS doesn't
+      # distinguish between 'HMAC.3' and 'hmac.3'.
+      'https://raw.github.com/gist/4099291/b94e286b9a51a140ea7c1107b23c1e8499aae037/openssl-fix-case-insensitivity.diff'
+    ]
+  end
+
   def install
     args = %W[./Configure
                --prefix=#{prefix}
